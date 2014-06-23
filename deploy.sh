@@ -20,7 +20,7 @@ GITPATH="$CURRENTDIR" # this file should be in the base of your git repository
 # svn config
 SVNPATH="/tmp/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
 SVNURL="http://plugins.svn.wordpress.org/$PLUGINSLUG/" # Remote SVN repo on WordPress.org, with no trailing slash
-SVNUSER="khornberg" # your svn username
+SVNUSER="averta" # your svn username
 
 # Let's begin...
 echo ".........................................."
@@ -70,7 +70,7 @@ echo "Ignoring github specific files and deployment script"
 # .gitignore" "$SVNPATH/trunk/"
 
 #couldn't get multi line patten above to ignore wp-assets folder
-svn propset svn:ignore "wp-assets"$'\n'"deploy.sh"$'\n'"README.md"$'\n'"readme.md"$'\n'".git"$'\n'".gitignore" "$SVNPATH/trunk/"
+svn propset svn:ignore "deploy.sh"$'\n'"README.md"$'\n'"readme.md"$'\n'".git"$'\n'".gitignore" "$SVNPATH/trunk/"
 
 #export git -> SVN
 echo "Exporting the HEAD of master from git to the trunk of SVN"
