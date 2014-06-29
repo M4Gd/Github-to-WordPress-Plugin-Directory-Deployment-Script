@@ -84,7 +84,10 @@ echo "Exporting the HEAD of master from git to the trunk of SVN"
 git checkout-index -a -f --prefix=$SVNPATH/trunk/
 
 # sed commands to convert readme.md to readme.txt
-# sed -e 's/^#\{1\} \(.*\)/=== \1 ===/g' -e 's/^#\{2\} \(.*\)/== \1 ==/g' -e 's/^#\{3\} \(.*\)/= \1 =/g' -e 's/^#\{4,5\} \(.*\)/**\1**/g' "readme.md" > "$SVNPATH/trunk/readme.txt"
+if [ -f "readme.md" ]
+then
+sed -e 's/^#\{1\} \(.*\)/=== \1 ===/g' -e 's/^#\{2\} \(.*\)/== \1 ==/g' -e 's/^#\{3\} \(.*\)/= \1 =/g' -e 's/^#\{4,5\} \(.*\)/**\1**/g' "readme.md" > "$SVNPATH/trunk/readme.txt"
+fi
 
 #if submodule exist, recursively check out their indexes
 if [ -f ".gitmodules" ]
