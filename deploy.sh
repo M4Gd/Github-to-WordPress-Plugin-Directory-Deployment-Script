@@ -11,10 +11,6 @@
 echo -e "Plugin Slug: \c"
 read PLUGINSLUG
 
-#prompt for svn username
-echo -e "Your SVN username: \c"
-read SVNUSER
-
 # main config, set off of plugin slug
 CURRENTDIR=`pwd`
 # CURRENTDIR="$CURRENTDIR/$PLUGINSLUG"
