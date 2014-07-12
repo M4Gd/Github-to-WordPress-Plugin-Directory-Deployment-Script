@@ -1,8 +1,6 @@
 #! /bin/bash
 #
 # Script to deploy from Github to WordPress.org Plugin Repository
-# Put this file in root directory of your plugin, then run "sh deploy.sh" in terminal
-#
 # A modification of Dean Clatworthy's deploy script as found here: https://github.com/deanc/wordpress-plugin-git-svn
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 # Source: https://github.com/thenbrent/multisite-user-management/blob/master/deploy.sh
@@ -23,10 +21,7 @@ GITPATH="$CURRENTDIR" # this file should be in the base of your git repository
 # svn config
 SVNPATH="/tmp/$PLUGINSLUG" # path to a temp SVN repo. No trailing slash required and don't add trunk.
 SVNURL="http://plugins.svn.wordpress.org/$PLUGINSLUG/" # Remote SVN repo on WordPress.org, with no trailing slash
-# SVNUSER="username" # your svn username
-#prompt for svn username
-echo -e "Your SVN username: \c"
-read SVNUSER
+SVNUSER="averta" # your svn username
 
 # Let's begin...
 echo ".........................................."
@@ -77,17 +72,14 @@ echo "Ignoring github specific files and deployment script"
 # .gitignore" "$SVNPATH/trunk/"
 
 #couldn't get multi line patten above to ignore wp-assets folder
-svn propset svn:ignore "deploy.sh"$'\n'"README.md"$'\n'"readme.md"$'\n'".git"$'\n'".gitignore" "$SVNPATH/trunk/"
+svn propset svn:ignore "deploy.sh"$'\n'"wp-assets"$'\n'"README.md"$'\n'"readme.md"$'\n'".git"$'\n'".gitignore" "$SVNPATH/trunk/"
 
 #export git -> SVN
 echo "Exporting the HEAD of master from git to the trunk of SVN"
 git checkout-index -a -f --prefix=$SVNPATH/trunk/
 
 # sed commands to convert readme.md to readme.txt
-if [ -f "readme.md" ]
-then
-sed -e 's/^#\{1\} \(.*\)/=== \1 ===/g' -e 's/^#\{2\} \(.*\)/== \1 ==/g' -e 's/^#\{3\} \(.*\)/= \1 =/g' -e 's/^#\{4,5\} \(.*\)/**\1**/g' "readme.md" > "$SVNPATH/trunk/readme.txt"
-fi
+# sed -e 's/^#\{1\} \(.*\)/=== \1 ===/g' -e 's/^#\{2\} \(.*\)/== \1 ==/g' -e 's/^#\{3\} \(.*\)/= \1 =/g' -e 's/^#\{4,5\} \(.*\)/**\1**/g' "readme.md" > "$SVNPATH/trunk/readme.txt"
 
 #if submodule exist, recursively check out their indexes
 if [ -f ".gitmodules" ]
@@ -113,9 +105,11 @@ svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
 # Add assets
 if [ -d "$GITPATH/wp-assets" ]
 then
+
 echo "Changing directory to SVN and committing to assets"
 cd $SVNPATH/assets
 cp $GITPATH/wp-assets/* .
+
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
 svn commit --username=$SVNUSER -m "$COMMITMSG"
 fi
